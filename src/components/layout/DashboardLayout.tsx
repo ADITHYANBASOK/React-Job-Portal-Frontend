@@ -1,5 +1,5 @@
 import { Link, Outlet, useLocation } from 'react-router-dom';
-import { Briefcase, LayoutDashboard, Users, Settings, FileText, MessageSquare, User, BarChart2 } from 'lucide-react';
+import { Briefcase, LayoutDashboard, Users, Settings, FileText, MessageSquare, User, BarChart2 , Building2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { ThemeToggle } from '@/components/theme/ThemeToggle';
@@ -16,6 +16,10 @@ const roleNavItems: Record<string, NavItem[]> = {
     { label: 'Applications', icon: <FileText className="w-4 h-4" />, href: '/seeker/applications' },
     { label: 'Messages', icon: <MessageSquare className="w-4 h-4" />, href: '/seeker/messages' },
     { label: 'Profile', icon: <User className="w-4 h-4" />, href: '/seeker/profile' },
+    { label: 'Jobs', icon: <Briefcase className="w-4 h-4" />, href: '/seeker/jobs' },
+    { label: 'Companies', icon: <Building2 className="w-4 h-4" />, href: '/seeker/companies' },
+
+
   ],
   employer: [
     { label: 'Dashboard', icon: <LayoutDashboard className="w-4 h-4" />, href: '/employer/dashboard' },
@@ -44,7 +48,7 @@ export function DashboardLayout({ role }: DashboardLayoutProps) {
   return (
      <div className="min-h-screen bg-background">
       <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-        <div className="container flex h-16 items-center">
+        <div className="container flex h-16 items-center w-11/12 mx-auto">
           <Link to="/" className="flex items-center space-x-2">
             <Briefcase className="h-6 w-6 text-emerald-600" />
             <span className="font-bold text-xl">JobBoard</span>

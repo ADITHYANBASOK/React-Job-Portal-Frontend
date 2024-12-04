@@ -5,7 +5,7 @@ import { Search } from 'lucide-react';
 
 export function HomePage() {
   return (
-    <div>
+    <div className='w-4/5'>
       <section className="py-20 bg-gradient-to-b from-white to-gray-50 dark:from-gray-900 dark:to-gray-950">
         <div className="container">
           <div className="max-w-3xl mx-auto text-center">

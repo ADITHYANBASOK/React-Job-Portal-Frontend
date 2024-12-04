@@ -6,10 +6,10 @@ import { DashboardLayout } from '@/components/layout/DashboardLayout';
 
 // Public Pages
 import { HomePage } from '@/pages/public/HomePage';
-// import { JobsPage } from '@/pages/public/JobsPage';
-// import { JobDetailsPage } from '@/pages/public/JobDetailsPage';
-// import { CompaniesPage } from '@/pages/public/CompaniesPage';
-// import { CompanyDetailsPage } from '@/pages/public/CompanyDetailsPage';
+import { JobsPage } from '@/pages/public/JobsPage';
+import { JobDetailsPage } from '@/pages/public/JobDetailsPage';
+import { CompaniesPage } from '@/pages/public/CompaniesPage';
+import { CompanyDetailsPage } from '@/pages/public/CompanyDetailsPage';
 import { LoginPage } from '@/pages/auth/LoginPage';
 import { RegisterPage } from '@/pages/auth/RegisterPage';
 
@@ -18,16 +18,27 @@ import { SeekerDashboardPage } from '@/pages/seeker/DashboardPage';
 // import { SeekerApplicationsPage } from '@/pages/seeker/ApplicationsPage';
 // import { SeekerProfilePage } from '@/pages/seeker/ProfilePage';
 // import { SeekerMessagesPage } from '@/pages/seeker/MessagesPage';
+import SeekerMessagesPage from './pages/seeker/MessagesPage';
+import SeekerProfilePage from './pages/seeker/ProfilePage';
+import JobSeekerApplications from './pages/seeker/AppliedApplicationPage';
+
+
 
 // Employer Pages
 import { EmployerDashboardPage } from '@/pages/employer/DashboardPage';
 import { EmployerJobsPage } from '@/pages/employer/JobsPage';
-// import { EmployerApplicationsPage } from '@/pages/employer/ApplicationsPage';
-// import { EmployerProfilePage } from '@/pages/employer/ProfilePage';
 // import { EmployerMessagesPage } from '@/pages/employer/MessagesPage';
+import EmployerProfilePage from './pages/employer/CompanyProfile';
+import EmployerApplicationsPage from './pages/employer/Applications';
+
+
+
 
 // Admin Pages
 import { AdminDashboardPage } from '@/pages/admin/DashboardPage';
+import ApplicationSuccess from './pages/seeker/ApplicationSuccess';
+import EmployerJobDetailsPage from './pages/employer/JobDetailsPage';
+
 // import { AdminUsersPage } from '@/pages/admin/UsersPage';
 // import { AdminJobsPage } from '@/pages/admin/JobsPage';
 // import { AdminReportsPage } from '@/pages/admin/ReportsPage';
@@ -43,10 +54,10 @@ function App() {
           {/* Public Routes */}
           <Route path="/" element={<MainLayout />}>
             <Route index element={<HomePage />} />
-            {/* <Route path="jobs" element={<JobsPage />} />
+            <Route path="jobs" element={<JobsPage />} />
             <Route path="jobs/:id" element={<JobDetailsPage />} />
             <Route path="companies" element={<CompaniesPage />} />
-            <Route path="companies/:id" element={<CompanyDetailsPage />} /> */}
+            <Route path="companies/:id" element={<CompanyDetailsPage />} />
             <Route path="login" element={<LoginPage />} />
             <Route path="register" element={<RegisterPage />} />
           </Route>
@@ -55,9 +66,17 @@ function App() {
           <Route path="/seeker" element={<DashboardLayout role="seeker" />}>
             <Route index element={<Navigate to="/seeker/dashboard" replace />} />
             <Route path="dashboard" element={<SeekerDashboardPage />} />
-            {/* <Route path="applications" element={<SeekerApplicationsPage />} />
+            <Route path="applications" element={<JobSeekerApplications />} />
             <Route path="profile" element={<SeekerProfilePage />} />
-            <Route path="messages" element={<SeekerMessagesPage />} /> */}
+            <Route path="messages" element={<SeekerMessagesPage />} />
+            <Route path="companies" element={<CompaniesPage />} />
+            <Route path="companies/:id" element={<CompanyDetailsPage />} />
+            <Route path='jobs' element={<JobsPage/>}/>
+            <Route path="jobs/:id" element={<JobDetailsPage />} />
+            <Route path='Application-Success' element={<ApplicationSuccess/>}/>
+
+
+
           </Route>
 
           {/* Employer Routes */}
@@ -65,9 +84,12 @@ function App() {
             <Route index element={<Navigate to="/employer/dashboard" replace />} />
             <Route path="dashboard" element={<EmployerDashboardPage />} />
             <Route path="jobs" element={<EmployerJobsPage />} />
-            {/* <Route path="applications" element={<EmployerApplicationsPage />} />
+            <Route path="jobs/:id" element={<EmployerJobDetailsPage />} />
+            <Route path="applications" element={<EmployerApplicationsPage />} />
             <Route path="profile" element={<EmployerProfilePage />} />
-            <Route path="messages" element={<EmployerMessagesPage />} /> */}
+            <Route path="messages" element={<SeekerMessagesPage />} />
+
+            {/* <Route path="messages" element={<EmployerMessagesPage />} /> */}
           </Route>
 
           {/* Admin Routes */}

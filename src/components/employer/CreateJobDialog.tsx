@@ -29,6 +29,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { JOB_TYPES } from '@/lib/constants';
+import axios from 'axios';
 
 const jobFormSchema = z.object({
   title: z.string().min(1, 'Title is required'),
@@ -65,20 +66,24 @@ export function CreateJobDialog({ open, onOpenChange }: CreateJobDialogProps) {
 
   async function onSubmit(values: z.infer<typeof jobFormSchema>) {
     setIsSubmitting(true);
+  
     try {
-      // TODO: Implement job creation API call
-      console.log(values);
+      const response = await axios.post('http://localhost:5000/api/jobs/jobs', values);
+  
+      console.log('Job created successfully:', response.data);
+  
+      // Close dialog after successful submission
       onOpenChange(false);
-    } catch (error) {
-      console.error('Failed to create job:', error);
+    } catch (error: any) {
+      console.error('Error creating job:', error.response?.data || error.message);
     } finally {
       setIsSubmitting(false);
     }
   }
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-2xl">
+    <Dialog open={open} onOpenChange={onOpenChange} >
+      <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>Post a New Job</DialogTitle>
           <DialogDescription>

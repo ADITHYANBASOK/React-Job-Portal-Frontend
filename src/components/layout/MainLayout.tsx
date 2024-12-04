@@ -34,7 +34,7 @@ export function MainLayout() {
           <Link to="/login" className="hover:scale-105 transition-transform duration-300">Sign In</Link>
         </Button>
         <Button asChild>
-          <Link to="/register" className="hover:scale-105 transition-transform duration-300">Post a Job</Link>
+          <Link to="/register" className="hover:scale-105 transition-transform duration-300">Sign Up</Link>
         </Button>
       </div>
       
@@ -53,9 +53,9 @@ export function MainLayout() {
 
   {/* Main content centered on the screen */}
   <main className="flex justify-center items-center min-h-screen">
-    <div className="max-w-2xl w-full px-4 sm:px-6 lg:px-8">
+    {/* <div className="max-w-2xl w-full px-4 sm:px-6 lg:px-8"> */}
       <Outlet />
-    </div>
+    {/* </div> */}
   </main>
 
   <footer className="border-t py-8 bg-background">
