@@ -49,6 +49,7 @@ interface CreateJobDialogProps {
 
 export function CreateJobDialog({ open, onOpenChange }: CreateJobDialogProps) {
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const token = localStorage.getItem('Etoken')
 
   const form = useForm<z.infer<typeof jobFormSchema>>({
     resolver: zodResolver(jobFormSchema),
@@ -68,7 +69,7 @@ export function CreateJobDialog({ open, onOpenChange }: CreateJobDialogProps) {
     setIsSubmitting(true);
   
     try {
-      const response = await axios.post('http://localhost:5000/api/jobs/jobs', values);
+      const response = await axios.post(`http://localhost:5000/api/jobs/jobs/${token}`, values);
   
       console.log('Job created successfully:', response.data);
   

@@ -114,7 +114,7 @@
 //     </div>
 //   );
 // }
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Job } from '@/types';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -134,6 +134,8 @@ import {
 import { MoreVertical, Pencil, Trash2, Eye } from 'lucide-react';
 import { EditJobDialog } from './EditJobDialog'; // Make sure the path is correct
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
+
 
 // Mock data - replace with actual API call
 // const mockJobs: Job[] = [
@@ -158,6 +160,40 @@ import { useNavigate } from 'react-router-dom';
 //   },
 //   // Add more mock jobs as needed
 // ];
+interface Company {
+  _id: string;
+  employerId: string;
+  name: string;
+  description: string;
+  industry: string;
+  website: string;
+  location: string;
+  size: string;
+  email: string;
+  phone: string;
+  createdAt: string;
+  updatedAt: string;
+  __v: number;
+}
+
+interface Jobs {
+  _id: string;
+  employerId: string;
+  title: string;
+  type: 'full-time' | 'part-time' | 'contract' | 'remote';
+  location: string;
+  salaryMin: number;
+  salaryMax: number;
+  description: string;
+  requirements: string[];
+  benefits: string[];
+  createdAt: string;
+  __v: number;
+  company: Company; // Embedded company object
+}
+
+
+
 
 interface JobListProps {
   searchQuery: string;
@@ -166,29 +202,44 @@ interface JobListProps {
 export function JobList({ searchQuery }: JobListProps) {
   const navigate = useNavigate()
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [selectedJob, setSelectedJob] = useState<Job | null>(null); // State for the selected job
+  const [selectedJob, setSelectedJob] = useState<Jobs | null>(null); // State for the selected job
   const [showDeleteConfirm, setShowDeleteConfirm] = useState<string | null>(null);
-  const [jobs, setJobs] = useState<Job[]>([
-    {
-          id: '1',
-          title: 'Senior Frontend Developer',
-          company: 'TechCorp',
-          location: 'Remote',
-          type: 'full-time',
-          salary: {
-            min: 100000,
-            max: 150000,
-            currency: 'USD',
-          },
-          description: 'We are looking for a senior frontend developer...',
-          requirements: ['5+ years of experience', 'React expertise'],
-          benefits: ['Health insurance', '401k'],
-          employerId: '1',
-          createdAt: new Date('2024-01-01'),
-          updatedAt: new Date('2024-01-01'),
-          status: 'published',
-        },
+  const [jobs, setJobs] = useState<Jobs[]>([
+    // {
+    //       id: '1',
+    //       title: 'Senior Frontend Developer',
+    //       company: 'TechCorp',
+    //       location: 'Remote',
+    //       type: 'full-time',
+    //       salary: {
+    //         min: 100000,
+    //         max: 150000,
+    //         currency: 'USD',
+    //       },
+    //       description: 'We are looking for a senior frontend developer...',
+    //       requirements: ['5+ years of experience', 'React expertise'],
+    //       benefits: ['Health insurance', '401k'],
+    //       employerId: '1',
+    //       createdAt: new Date('2024-01-01'),
+    //       updatedAt: new Date('2024-01-01'),
+    //       status: 'published',
+    //     },
   ]);
+  const token = localStorage.getItem('Etoken')
+
+  useEffect(() => {
+    const fetchJobs = async () => {
+      try {
+        const response = await axios.get(`http://localhost:5000/api/jobs/employerjobs/${token}`); // Replace with your backend endpoint
+        console.log(response)
+        setJobs(response.data); // Assuming the backend returns an array of jobs
+      } catch (error) {
+        console.error('Error fetching jobs:', error);
+      }
+    };
+
+    fetchJobs();
+  }, []); 
 
 
   const filteredJobs = jobs.filter((job) =>
@@ -204,7 +255,7 @@ export function JobList({ searchQuery }: JobListProps) {
     return `${formatter.format(min)} - ${formatter.format(max)}`;
   };
 
-  const handleEditJob = (job: Job) => {
+  const handleEditJob = (job: Jobs) => {
     setSelectedJob(job); // Set the selected job for editing
     setIsDialogOpen(true); // Open the dialog
   };
@@ -213,18 +264,18 @@ export function JobList({ searchQuery }: JobListProps) {
     navigate(`/employer/jobs/${jobId}`);
   };
   const handleDelete = (jobId: string) => {
-    setJobs(jobs.filter(job => job.id !== jobId));
+    setJobs(jobs.filter(job => job._id !== jobId));
     setShowDeleteConfirm(null);
   };
 
   return (
     <div className="space-y-4">
       {filteredJobs.map((job) => (
-        <Card key={job.id}>
+        <Card key={job._id}>
           <CardHeader className="flex flex-row items-start justify-between space-y-0">
             <div>
               <CardTitle>{job.title}</CardTitle>
-              <CardDescription>{job.company}</CardDescription>
+              <CardDescription>{job.company.name}</CardDescription>
             </div>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
@@ -233,7 +284,7 @@ export function JobList({ searchQuery }: JobListProps) {
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
-                <DropdownMenuItem onClick={() => handleView(job.id)}
+                <DropdownMenuItem onClick={() => handleView(job._id)}
                 >
                   <Eye className="w-4 h-4 mr-2" />
                   View
@@ -242,7 +293,7 @@ export function JobList({ searchQuery }: JobListProps) {
                   <Pencil className="w-4 h-4 mr-2" />
                   Edit
                 </DropdownMenuItem>
-                <DropdownMenuItem className="text-destructive" onClick={() => setShowDeleteConfirm(job.id)}>
+                <DropdownMenuItem className="text-destructive" onClick={() => setShowDeleteConfirm(job._id)}>
                   <Trash2 className="w-4 h-4 mr-2" />
                   Delete
                 </DropdownMenuItem>
@@ -254,18 +305,18 @@ export function JobList({ searchQuery }: JobListProps) {
               <Badge variant="secondary">{job.type}</Badge>
               <Badge variant="secondary">{job.location}</Badge>
               <Badge variant="secondary">
-                {formatSalary(job.salary.min, job.salary.max, job.salary.currency)}
+                {/* {formatSalary(job.salaryMin, job.salaryMax)} */}{job.salaryMin} - {job.salaryMax}
               </Badge>
             </div>
             <p className="text-sm text-muted-foreground line-clamp-2">
               {job.description}
             </p>
             <div className="flex justify-between items-center text-sm text-muted-foreground">
-              <span>Posted {job.createdAt.toLocaleDateString()}</span>
+              {/* <span>Posted {job.createdAt.toLocaleDateString()}</span> */}
               <Badge
-                variant={job.status === 'published' ? 'default' : 'secondary'}
+                // variant={job.status === 'published' ? 'default' : 'secondary'}
               >
-                {job.status}
+                {/* {job.status} */}
               </Badge>
             </div>
           </CardContent>

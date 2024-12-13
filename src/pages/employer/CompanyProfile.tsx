@@ -335,6 +335,7 @@ export default function EmployerProfilePage() {
   const [isEditing, setIsEditing] = useState(false);
   const [profile, setProfile] = useState<CompanyProfile | null>(null);
   const [status, setStatus]=useState(false)
+  const token = localStorage.getItem('Etoken')
 
   // Fields array to dynamically generate form fields
   const fields = [
@@ -352,10 +353,13 @@ export default function EmployerProfilePage() {
   useEffect(() => {
     const fetchProfile = async () => {
       try {
-        const response = await API.get('/companies'); // Replace with the appropriate endpoint
+        const response = await API.get(`/companies/${token}`); // Replace with the appropriate endpoint
+        console.log(response)
+
         if (response.data.length > 0) {
+          console.log(response)
           setProfile(response.data[0]); // Assuming backend returns an array of companies
-          setStatus
+          setStatus(true)
         }
       } catch (error) {
         console.error('Failed to fetch profile:', error);
@@ -371,12 +375,12 @@ export default function EmployerProfilePage() {
       if (status) {
         console.log("profile",profile)
         // Update existing profile
-        await API.put(`/companies/${profile.id}`, profile); // Replace with backend's ID field
+        await API.put(`/companies/${token}`, profile); // Replace with backend's ID field
         console.log('Profile updated successfully');
       } else {
         // Add new profile
         console.log("profile",profile)
-        const response = await API.post('/companies', profile);
+        const response = await API.post(`/companies/${token}`, profile);
         setProfile(response.data);
         console.log('Profile created successfully');
       }

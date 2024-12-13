@@ -1,4 +1,4 @@
-import { Link, Outlet, useLocation } from 'react-router-dom';
+import { Link, Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { Briefcase, LayoutDashboard, Users, Settings, FileText, MessageSquare, User, BarChart2 , Building2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
@@ -43,7 +43,19 @@ interface DashboardLayoutProps {
 
 export function DashboardLayout({ role }: DashboardLayoutProps) {
   const location = useLocation();
+  const navigate = useNavigate()
   const navItems = roleNavItems[role];
+  const SignOut = ()=>{
+    if (role == "seeker"){
+      localStorage.removeItem("Stoken")
+      
+    }else if(role == "employer"){
+      localStorage.removeItem("Etoken")
+    }else{
+      localStorage.removeItem("token")
+    }
+    navigate("/")
+    }
 
   return (
      <div className="min-h-screen bg-background">
@@ -56,7 +68,7 @@ export function DashboardLayout({ role }: DashboardLayoutProps) {
 
           <div className="ml-auto flex items-center space-x-4">
             <ThemeToggle />
-            <Button variant="outline" size="sm">
+            <Button variant="outline" size="sm" onClick={SignOut}>
               Sign Out
             </Button>
           </div>

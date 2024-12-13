@@ -71,7 +71,7 @@
 //   );
 // }
 
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import { Button } from '@/components/ui/button';
@@ -91,6 +91,7 @@ const validationSchema = Yup.object({
 });
 
 export function RegisterPage() {
+  const navigate = useNavigate()
   // Formik setup
   const formik = useFormik({
     initialValues: {
@@ -109,6 +110,14 @@ export function RegisterPage() {
         const response = await axios.post('http://localhost:5000/api/auth/signUp', values);
         // Handle successful registration, e.g., redirect to login
         console.log("successfull",response)
+        console.log("role",response.data.data.role)
+        if(response.data.data.role=='seeker'){
+          localStorage.setItem('Stoken', response.data.token);
+          navigate('/seeker');
+        }else{
+          localStorage.setItem('Etoken', response.data.token);
+          navigate('/employer');
+        }
       } catch (error) {
         console.error('Error registering', error);
       }

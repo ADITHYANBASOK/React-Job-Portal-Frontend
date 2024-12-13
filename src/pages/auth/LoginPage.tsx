@@ -68,9 +68,14 @@ export function LoginPage() {
       try {
         const response = await axios.post('http://localhost:5000/api/auth/login', values);
         if (response.data.success) {
-          // On successful login, redirect to the dashboard or home
-          localStorage.setItem('token', response.data.token); // Save JWT token
-          navigate('/employer'); // Redirect to dashboard or any page you want
+          console.log("respose",response)
+          if (response.data.role == "seeker"){
+          localStorage.setItem('Stoken', response.data.token); // Save JWT token
+          navigate('/seeker'); // Redirect to dashboard or any page you want
+        }else{
+          localStorage.setItem('Etoken', response.data.token);
+          navigate('/employer');
+        }
         }
       } catch (error) {
         setErrors({ password: 'Invalid email or password' });
