@@ -109,8 +109,8 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 
 interface ProfileData {
-  name: string;
-  email: string;
+  // name: string;
+  // email: string;
   bio: string;
   location: string;
   phone: string;
@@ -146,19 +146,20 @@ export default function ProfileInfo({ profileData, isEditing, onEdit, onUpdate }
           onClick={() => setIsDialogOpen(true)}
           className="px-4 py-2 text-sm font-medium text-white bg-indigo-600 rounded-lg hover:bg-indigo-700"
         >
-          Edit Profile
+          {profileData.bio?'Edit Profile':'Add Profile'}
         </button>
       </div>
 
+
       <div className="space-y-4">
-        <p className="text-gray-600 dark:text-gray-400">{profileData.bio}</p>
+        <p className="text-gray-600 dark:text-gray-400">{profileData?.bio}</p>
         <div className="grid grid-cols-2 gap-4">
           <div>
             <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400">
               Location
             </h3>
             <p className="mt-1 text-sm text-gray-900 dark:text-white">
-              {profileData.location}
+              {profileData?.location}
             </p>
           </div>
           <div>
@@ -166,7 +167,7 @@ export default function ProfileInfo({ profileData, isEditing, onEdit, onUpdate }
               Phone
             </h3>
             <p className="mt-1 text-sm text-gray-900 dark:text-white">
-              {profileData.phone}
+              {profileData?.phone}
             </p>
           </div>
         </div>
@@ -183,19 +184,19 @@ export default function ProfileInfo({ profileData, isEditing, onEdit, onUpdate }
           </DialogHeader>
 
           <div className="space-y-4">
-            <div>
+            {/* <div>
               <label className="block text-sm font-medium text-gray-700 dark:text-gray-400">Name</label>
               <Input
                 value={updatedProfileData.name}
                 onChange={(e) => handleUpdate('name', e.target.value)}
                 placeholder="Enter your name"
               />
-            </div>
+            </div> */}
 
             <div>
               <label className="block text-sm font-medium text-gray-700 dark:text-gray-400">Bio</label>
               <textarea
-                value={updatedProfileData.bio}
+                value={updatedProfileData.bio || ''}
                 onChange={(e) => handleUpdate('bio', e.target.value)}
                 rows={4}
                 className="mt-1 block w-full rounded-md border dark:border-gray-600 dark:bg-gray-700 dark:text-white"
@@ -205,7 +206,7 @@ export default function ProfileInfo({ profileData, isEditing, onEdit, onUpdate }
             <div>
               <label className="block text-sm font-medium text-gray-700 dark:text-gray-400">Location</label>
               <Input
-                value={updatedProfileData.location}
+                value={updatedProfileData.location || ''}
                 onChange={(e) => handleUpdate('location', e.target.value)}
                 placeholder="Enter your location"
               />
@@ -214,7 +215,7 @@ export default function ProfileInfo({ profileData, isEditing, onEdit, onUpdate }
             <div>
               <label className="block text-sm font-medium text-gray-700 dark:text-gray-400">Phone</label>
               <Input
-                value={updatedProfileData.phone}
+                value={updatedProfileData.phone || ''}
                 onChange={(e) => handleUpdate('phone', e.target.value)}
                 placeholder="Enter your phone number"
               />
