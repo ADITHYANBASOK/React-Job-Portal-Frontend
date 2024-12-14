@@ -30,6 +30,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { JOB_TYPES } from '@/lib/constants';
+import axios from 'axios';
 
 const jobFormSchema = z.object({
   title: z.string().min(1, 'Title is required'),
@@ -50,6 +51,10 @@ interface EditJobDialogProps {
 
 export function EditJobDialog({ job, open, onOpenChange }: EditJobDialogProps) {
   const [isSubmitting, setIsSubmitting] = useState(false);
+  console.log("job",job)
+  const token = localStorage.getItem('Etoken')
+
+
 
   const form = useForm<z.infer<typeof jobFormSchema>>({
     resolver: zodResolver(jobFormSchema),
@@ -57,8 +62,8 @@ export function EditJobDialog({ job, open, onOpenChange }: EditJobDialogProps) {
       title: job.title,
       type: job.type,
       location: job.location,
-      salaryMin: job.salary.min.toString(),
-      salaryMax: job.salary.max.toString(),
+      salaryMin: job.salaryMin.toString(),
+      salaryMax: job.salaryMax.toString(),
       description: job.description,
       requirements: job.requirements.join('\n'),
       benefits: job.benefits.join('\n'),
@@ -66,9 +71,13 @@ export function EditJobDialog({ job, open, onOpenChange }: EditJobDialogProps) {
   });
 
   async function onSubmit(values: z.infer<typeof jobFormSchema>) {
+    console.log("hai",job._id)
     setIsSubmitting(true);
     try {
       // TODO: Implement job update API call
+      const response = await axios.put(`http://localhost:5000/api/jobs/jobs/${job._id}/${token}`, values);
+  
+      console.log('Job created successfully:', response.data);
       console.log(values);
       onOpenChange(false);
     } catch (error) {

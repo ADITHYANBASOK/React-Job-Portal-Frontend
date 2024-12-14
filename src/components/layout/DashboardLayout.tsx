@@ -3,6 +3,8 @@ import { Briefcase, LayoutDashboard, Users, Settings, FileText, MessageSquare, U
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { ThemeToggle } from '@/components/theme/ThemeToggle';
+import { useEffect  } from 'react';
+// import { boolean } from 'yup';
 
 interface NavItem {
   label: string;
@@ -56,6 +58,21 @@ export function DashboardLayout({ role }: DashboardLayoutProps) {
     }
     navigate("/")
     }
+
+    useEffect(() => {
+      let token; 
+      if (role === "seeker") {
+        token = localStorage.getItem("Stoken");
+      } else if (role === "employer") {
+        token = localStorage.getItem("Etoken");
+      } else {
+        token = localStorage.getItem("token");
+      }
+    
+      if (!token) {
+        navigate('/login');
+      }
+    }, [role, navigate]);
 
   return (
      <div className="min-h-screen bg-background">
