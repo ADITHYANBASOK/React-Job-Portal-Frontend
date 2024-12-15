@@ -62,12 +62,13 @@
 //   );
 // }
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Plus } from 'lucide-react';
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog'; // Import dialog components
 import { Input } from '@/components/ui/input';
 import { Slider } from '@/components/ui/slider';
 import { Button } from '@/components/ui/button';
+import axios from 'axios';
 
 interface Skill {
   id: string;
@@ -81,6 +82,7 @@ export default function SkillsList() {
     // { id: '2', name: 'TypeScript', level: 85 },
     // { id: '3', name: 'Node.js', level: 80 },
   ]);
+  const token = localStorage.getItem('Stoken')
 
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [newSkill, setNewSkill] = useState<Skill>({
@@ -88,6 +90,24 @@ export default function SkillsList() {
     name: '',
     level: 50,
   });
+
+
+  useEffect(() => {
+    const fetchSkills = async () => {
+      try {
+        
+        const response = await axios.get(`http://localhost:5000/api/skill`,  {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        console.log("response.data",response.data)
+        setSkills(response.data);
+      } catch (error) {
+        console.error('Failed to fetch skills:', error);
+      }
+    };
+  
+    fetchSkills();
+  }, []);
 
   const handleAddSkill = () => {
     setIsDialogOpen(true);
@@ -102,10 +122,23 @@ export default function SkillsList() {
     });
   };
 
-  const handleSubmit = () => {
-    const skillToAdd = { ...newSkill, id: Date.now().toString() };
-    setSkills([...skills, skillToAdd]);
-    handleCloseDialog();
+  
+
+  const handleSubmit = async () => {
+    try {
+    
+      const response = await axios.post(`http://localhost:5000/api/skill`, {
+        name: newSkill.name,
+        level: newSkill.level, 
+      },{
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      console.log("response3",response)
+      setSkills([...skills, response.data]);
+      handleCloseDialog();
+    } catch (error) {
+      console.error('Failed to add skill:', error);
+    }
   };
 
   return (

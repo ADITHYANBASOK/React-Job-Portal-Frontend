@@ -78,12 +78,13 @@
 //   );
 // }
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Plus } from 'lucide-react';
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog'; // Import your dialog components
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
+import axios from 'axios';
 
 interface Experience {
   id: string;
@@ -96,14 +97,14 @@ interface Experience {
 
 export default function ExperienceList() {
   const [experiences, setExperiences] = useState<Experience[]>([
-    {
-      id: '1',
-      title: 'Senior Frontend Developer',
-      company: 'Tech Corp',
-      startDate: '2020-01',
-      endDate: 'Present',
-      description: 'Led the frontend development team in building modern web applications.',
-    },
+    // {
+    //   id: '1',
+    //   title: 'Senior Frontend Developer',
+    //   company: 'Tech Corp',
+    //   startDate: '2020-01',
+    //   endDate: 'Present',
+    //   description: 'Led the frontend development team in building modern web applications.',
+    // },
   ]);
 
   const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -115,6 +116,23 @@ export default function ExperienceList() {
     endDate: '',
     description: '',
   });
+
+  const token =localStorage.getItem('Stoken')
+
+  useEffect(() => {
+    const fetchExperiences = async () => {
+      try {
+        const response = await axios.get(`http://localhost:5000/api/experience`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        setExperiences(response.data);
+      } catch (error) {
+        console.error('Error fetching experiences:', error);
+      }
+    };
+
+    fetchExperiences();
+  }, []);
 
   const handleAddExperience = () => {
     setIsDialogOpen(true);
@@ -132,11 +150,35 @@ export default function ExperienceList() {
     });
   };
 
-  const handleSubmit = () => {
-    const experienceToAdd = { ...newExperience, id: Date.now().toString() };
-    setExperiences([...experiences, experienceToAdd]);
-    handleCloseDialog();
+  // const handleSubmit = () => {
+  //   const experienceToAdd = { ...newExperience, id: Date.now().toString() };
+  //   setExperiences([...experiences, experienceToAdd]);
+  //   handleCloseDialog();
+  // };
+
+
+  const handleSubmit = async () => {
+    try {
+      const response = await axios.post('http://localhost:5000/api/experience', {
+        ...newExperience,
+      },{
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      setExperiences([...experiences, response.data]);
+      handleCloseDialog();
+    } catch (error) {
+      console.error('Error adding experience:', error);
+    }
   };
+
+  // const handleDelete = async (id) => {
+  //   try {
+  //     await axios.delete(`/api/experiences/${id}`);
+  //     setExperiences(experiences.filter((exp) => exp.id !== id));
+  //   } catch (error) {
+  //     console.error('Error deleting experience:', error);
+  //   }
+  // };
 
   return (
     <div className="bg-white dark:bg-gray-800 shadow rounded-lg p-6">

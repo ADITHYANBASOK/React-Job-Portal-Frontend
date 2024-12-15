@@ -102,15 +102,13 @@
 //   );
 // }
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Save } from 'lucide-react';
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog'; // Import dialog components
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 
 interface ProfileData {
-  // name: string;
-  // email: string;
   bio: string;
   location: string;
   phone: string;
@@ -126,6 +124,9 @@ interface Props {
 export default function ProfileInfo({ profileData, isEditing, onEdit, onUpdate }: Props) {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [updatedProfileData, setUpdatedProfileData] = useState(profileData);
+  useEffect(() => {
+    setUpdatedProfileData(profileData);
+  }, [profileData])
 
   const handleUpdate = (field: keyof ProfileData, value: string) => {
     setUpdatedProfileData({ ...updatedProfileData, [field]: value });
