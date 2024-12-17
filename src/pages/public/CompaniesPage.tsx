@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Search, MapPin, Users, Building2 } from 'lucide-react';
 import { Input } from '@/components/ui/input';
@@ -12,41 +12,61 @@ import {
 } from '@/components/ui/select';
 import { INDUSTRIES, COMPANY_SIZES } from '@/lib/constants';
 import { Company } from '@/types';
+import axios from 'axios';
 
 // Mock data - replace with API call
-const mockCompanies: Company[] = [
-  {
-    id: '1',
-    name: 'TechCorp',
-    logo: 'https://images.unsplash.com/photo-1549923746-c502d488b3ea?w=100&h=100&fit=crop',
-    website: 'https://techcorp.example.com',
-    description: 'Leading technology solutions provider...',
-    industry: 'Technology',
-    size: '201-500',
-    location: 'San Francisco, CA',
-    employerId: '1',
-  },
-  {
-    id: '2',
-    name: 'DesignStudio',
-    logo: 'https://images.unsplash.com/photo-1572044162444-ad60f128bdea?w=100&h=100&fit=crop',
-    website: 'https://designstudio.example.com',
-    description: 'Creative design agency focused on brand identity...',
-    industry: 'Technology',
-    size: '11-50',
-    location: 'New York, NY',
-    employerId: '2',
-  },
-];
+// const mockCompanies: Company[] = [
+//   {
+//     id: '1',
+//     name: 'TechCorp',
+//     logo: 'https://images.unsplash.com/photo-1549923746-c502d488b3ea?w=100&h=100&fit=crop',
+//     website: 'https://techcorp.example.com',
+//     description: 'Leading technology solutions provider...',
+//     industry: 'Technology',
+//     size: '201-500',
+//     location: 'San Francisco, CA',
+//     employerId: '1',
+//   },
+//   {
+//     id: '2',
+//     name: 'DesignStudio',
+//     logo: 'https://images.unsplash.com/photo-1572044162444-ad60f128bdea?w=100&h=100&fit=crop',
+//     website: 'https://designstudio.example.com',
+//     description: 'Creative design agency focused on brand identity...',
+//     industry: 'Technology',
+//     size: '11-50',
+//     location: 'New York, NY',
+//     employerId: '2',
+//   },
+// ];
 
 export function CompaniesPage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedIndustry, setSelectedIndustry] = useState<string>('all');
   const [selectedSize, setSelectedSize] = useState<string>('all');
-  const [auth , setAuth] =useState<boolean>(true);
+  const [auth , setAuth] =useState<boolean>(false);
+  const [companies, setCompanies] = useState<Company[] >([
+   
+  ]);
+  // const token = localStorage.getItem('stoken')
+  
+useEffect
+  useEffect(() => {
+    const fetchJobs = async () => {
+      try {
+        const response = await axios.get('http://localhost:5000/api/companies'); // Replace with your backend endpoint
+        console.log("response341",response)
+        setCompanies(response.data); // Assuming the backend returns an array of jobs
+      } catch (error) {
+        console.error('Error fetching jobs:', error);
+      }
+    };
+
+    fetchJobs();
+  }, []); 
 
 
-  const filteredCompanies = mockCompanies.filter((company) => {
+  const filteredCompanies = companies.filter((company) => {
     const matchesSearch = company.name
       .toLowerCase()
       .includes(searchQuery.toLowerCase());
@@ -111,8 +131,8 @@ export function CompaniesPage() {
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
         {filteredCompanies.map((company) => (
           <Link
-            key={company.id}
-            to={auth ? `/seeker/companies/${company.id}` : `/companies/${company.id}`}
+            key={company._id}
+            to={auth ? `/seeker/companies/${company._id}` : `/companies/${company._id}`}
             className="block group"
           >
             <div className="border rounded-lg p-6 h-full hover:border-primary transition-colors">

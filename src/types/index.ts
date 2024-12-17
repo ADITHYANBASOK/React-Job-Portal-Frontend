@@ -53,6 +53,7 @@ export interface Application {
 export interface Company {
   _id: string;
   employerId: string;
+  logo:string;
   name: string;
   description: string;
   industry: string;

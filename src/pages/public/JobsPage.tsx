@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Search, MapPin, Building2, Clock } from 'lucide-react';
 import { Input } from '@/components/ui/input';
@@ -12,90 +12,67 @@ import {
 } from '@/components/ui/select';
 import { JOB_TYPES } from '@/lib/constants';
 import { Job } from '@/types';
+import axios from 'axios';
 
-// Mock data - replace with API call
-const mockJobs: Job[] = [
-  {
-    id: '1',
-    title: 'Senior Frontend Developer',
-    company: 'TechCorp',
-    location: 'Remote',
-    type: 'full-time',
-    salary: {
-      min: 100000,
-      max: 150000,
-      currency: 'USD',
-    },
-    description: 'We are looking for an experienced frontend developer to join our team...',
-    requirements: [
-      '5+ years of experience with React',
-      'Strong TypeScript skills',
-      'Experience with modern frontend tools',
-    ],
-    benefits: [
-      'Competitive salary',
-      'Remote work',
-      'Health insurance',
-      '401k matching',
-    ],
-    employerId: '1',
-    createdAt: new Date('2024-03-01'),
-    updatedAt: new Date('2024-03-01'),
-    status: 'published',
-  },
-  {
-    id: '2',
-    title: 'Product Designer',
-    company: 'DesignStudio',
-    location: 'New York, NY',
-    type: 'full-time',
-    salary: {
-      min: 90000,
-      max: 130000,
-      currency: 'USD',
-    },
-    description: 'Join our creative team as a Product Designer...',
-    requirements: [
-      '3+ years of product design experience',
-      'Proficiency in Figma',
-      'Strong portfolio',
-    ],
-    benefits: [
-      'Flexible hours',
-      'Health and dental',
-      'Annual learning budget',
-    ],
-    employerId: '2',
-    createdAt: new Date('2024-03-02'),
-    updatedAt: new Date('2024-03-02'),
-    status: 'published',
-  },
-];
+
 
 export function JobsPage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedType, setSelectedType] = useState<string>('all');
   const [selectedLocation, setSelectedLocation] = useState<string>('all');
-  const [auth , setAuth] =useState<boolean>(true);
+  const [auth , setAuth] =useState<boolean>(false);
+  const [jobs, setJobs] = useState<Job[]>([
+   
+  ]);
+  // const token = localStorage.getItem('stoken')
 
-  const formatSalary = (min: number, max: number, currency: string) => {
+  useEffect(() => {
+    const fetchJobs = async () => {
+      try {
+        const response = await axios.get(`http://localhost:5000/api/jobs/alljobs`); // Replace with your backend endpoint
+        console.log("response34",response)
+        setJobs(response.data); // Assuming the backend returns an array of jobs
+      } catch (error) {
+        console.error('Error fetching jobs:', error);
+      }
+    };
+
+    fetchJobs();
+  }, []); 
+
+  const formatSalary = (min: number, max: number, ) => {
     const formatter = new Intl.NumberFormat('en-US', {
-      style: 'currency',
-      currency,
+      // style: 'currency',
+      // currency,
       maximumFractionDigits: 0,
     });
     return `${formatter.format(min)} - ${formatter.format(max)}`;
   };
 
-  const filteredJobs = mockJobs.filter((job) => {
-    const matchesSearch = job.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      job.company.toLowerCase().includes(searchQuery.toLowerCase());
-    const matchesType = selectedType === 'all' || job.type === selectedType;
-    const matchesLocation = selectedLocation === 'all' || job.location === selectedLocation;
+  const filteredJobs = jobs?.filter((job) => {
+    const matchesSearch =
+      job.title?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      job.company?.name?.toLowerCase().includes(searchQuery.toLowerCase());
+  
+    const matchesType =
+      selectedType === 'all' ||
+      job.type?.toLowerCase().trim() === selectedType.toLowerCase().trim();
+  
+    const matchesLocation =
+      selectedLocation === 'all' ||
+      job.location?.toLowerCase().trim() === selectedLocation.toLowerCase().trim();
+  
+    // Log only true values
+    if (matchesSearch) console.log('Search Matches:', job.title);
+    if (matchesType) console.log('Type Matches:', job.type);
+    if (matchesLocation) console.log('Location Matches:', job.location);
+  
     return matchesSearch && matchesType && matchesLocation;
   });
+  
+  
 
-  const locations = Array.from(new Set(mockJobs.map((job) => job.location)));
+  const locations = Array.from(new Set(jobs.map((job) => job.location)));
 
   return (
     <div className="container mx-auto py-8 px-4">
@@ -108,6 +85,7 @@ export function JobsPage() {
       </div>
 
       {/* Search and Filters */}
+
       <div className="w-4/5 mx-auto mb-8">
         <div className="flex flex-col md:flex-row gap-4">
           <div className="flex-1 relative">
@@ -146,14 +124,16 @@ export function JobsPage() {
             </SelectContent>
           </Select>
         </div>
+
       </div>
 
       {/* Jobs List */}
+
       <div className="w-4/5 mx-auto space-y-6">
         {filteredJobs.map((job) => (
           <Link
-            key={job.id}
-            to={auth?`/seeker/jobs/${job.id}`:`/jobs/${job.id}`}
+            key={job._id}
+            to={auth?`/seeker/jobs/${job._id}`:`/jobs/${job._id}`}
             className="block group"
           >
             <div className="border rounded-lg p-6 hover:border-primary transition-colors">
@@ -162,10 +142,11 @@ export function JobsPage() {
                   <h2 className="text-xl font-semibold group-hover:text-primary transition-colors">
                     {job.title}
                   </h2>
-                  <p className="text-muted-foreground">{job.company}</p>
+                  <p className="text-muted-foreground">{job.company.name}</p>
                 </div>
                 <Badge variant="secondary">
-                  {formatSalary(job.salary.min, job.salary.max, job.salary.currency)}
+                {formatSalary(job.salaryMin, job.salaryMax)}
+
                 </Badge>
               </div>
               <p className="text-sm text-muted-foreground mb-4 line-clamp-2">
