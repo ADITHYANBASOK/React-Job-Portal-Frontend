@@ -1,41 +1,70 @@
+import axios from "axios";
+import { useEffect, useState } from "react";
 
 interface AppliedJob {
   id: string;
   title: string;
   company: string;
-  department: string;
+  // department: string;
   appliedDate: string;
   status: 'pending' | 'reviewing' | 'shortlisted' | 'rejected';
 }
 
-const appliedJobs: AppliedJob[] = [
-  {
-    id: '1',
-    title: 'Frontend Developer',
-    company: 'Tech Corp',
-    department: 'Engineering',
-    appliedDate: '2024-11-10',
-    status: 'shortlisted',
-  },
-  {
-    id: '2',
-    title: 'Backend Developer',
-    company: 'CodeWorks',
-    department: 'Development',
-    appliedDate: '2024-11-08',
-    status: 'reviewing',
-  },
-  {
-    id: '3',
-    title: 'UI/UX Designer',
-    company: 'Designify',
-    department: 'Creative',
-    appliedDate: '2024-11-05',
-    status: 'pending',
-  },
-];
+// const appliedJobs: AppliedJob[] = [
+//   {
+//     id: '1',
+//     title: 'Frontend Developer',
+//     company: 'Tech Corp',
+//     department: 'Engineering',
+//     appliedDate: '2024-11-10',
+//     status: 'shortlisted',
+//   },
+//   {
+//     id: '2',
+//     title: 'Backend Developer',
+//     company: 'CodeWorks',
+//     department: 'Development',
+//     appliedDate: '2024-11-08',
+//     status: 'reviewing',
+//   },
+//   {
+//     id: '3',
+//     title: 'UI/UX Designer',
+//     company: 'Designify',
+//     department: 'Creative',
+//     appliedDate: '2024-11-05',
+//     status: 'pending',
+//   },
+// ];
 
 export default function JobSeekerDashboard() {
+const token = localStorage.getItem('Stoken');
+
+const [jobs, setJobs] = useState<AppliedJob[]>([
+   
+  ]);
+
+useEffect(() => {
+  
+  const checkApplicationStatus = async () => {
+    try {
+      if (!token) return;
+
+      const response = await axios.get(
+        `http://localhost:5000/api/applications`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+      console.log("response.data1",response.data)
+      setJobs(response.data);
+    } catch (error) {
+      console.error('Error checking application status:', error);
+    }
+  };
+
+  checkApplicationStatus();
+}, []); 
   const getStatusBadge = (status: AppliedJob['status']) => {
     const colors = {
       pending: 'bg-yellow-100 text-yellow-800',
@@ -54,7 +83,7 @@ export default function JobSeekerDashboard() {
         </h1>
 
         <div className="space-y-4">
-          {appliedJobs.map((job) => (
+          {jobs.map((job) => (
             <div
               key={job.id}
               className="p-4 bg-white dark:bg-gray-800 rounded-lg shadow flex items-start justify-between"
@@ -64,7 +93,7 @@ export default function JobSeekerDashboard() {
                   {job.title}
                 </h2>
                 <p className="text-sm text-gray-600 dark:text-gray-400">
-                  {job.company} - {job.department}
+                  {job.company} - 
                 </p>
                 <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
                   Applied on: {new Date(job.appliedDate).toLocaleDateString()}

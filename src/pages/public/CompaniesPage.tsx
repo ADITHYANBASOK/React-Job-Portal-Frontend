@@ -48,6 +48,7 @@ export function CompaniesPage() {
   const [companies, setCompanies] = useState<Company[] >([
    
   ]);
+  const defaultlogo= 'https://img.freepik.com/free-vector/gradient-technology-logo-template-companies_52683-14451.jpg?t=st=1734756875~exp=1734760475~hmac=24b1a42659d95ee29c708c894533a4c625a5983d06732181b41a57d7d8df04bb&w=740' 
   // const token = localStorage.getItem('stoken')
   
 useEffect
@@ -138,7 +139,7 @@ useEffect
             <div className="border rounded-lg p-6 h-full hover:border-primary transition-colors">
               <div className="flex items-center gap-4 mb-4">
                 <img
-                  src={company.logo}
+                  src={defaultlogo}
                   alt={company.name}
                   className="w-16 h-16 rounded-lg object-cover"
                 />

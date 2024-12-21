@@ -53,7 +53,7 @@ export default function ApplicationFilters({ onSearch, onStatusChange }: Applica
         </div>
       </div>
 
-      <div className="mt-4 flex flex-wrap gap-2">
+      {/* <div className="mt-4 flex flex-wrap gap-2">
         <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-indigo-100 dark:bg-indigo-900 text-indigo-800 dark:text-indigo-200">
           Frontend Developer (12)
         </span>
@@ -64,7 +64,7 @@ export default function ApplicationFilters({ onSearch, onStatusChange }: Applica
           <Filter className="h-4 w-4 mr-1" />
           More Filters
         </button>
-      </div>
+      </div> */}
     </div>
   );
 }

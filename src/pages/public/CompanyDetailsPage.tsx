@@ -16,10 +16,10 @@ import { useEffect, useState } from 'react';
 import axios from 'axios';
 
 // Mock data - replace with API calls
-const mockCompany: Company = {
+// const mockCompany: Company = {
 //     _id: '1',
 //     name: 'TechCorp',
-    logo: 'https://images.unsplash.com/photo-1549923746-c502d488b3ea?w=200&h=200&fit=crop',
+// logo: 'https://images.unsplash.com/photo-1549923746-c502d488b3ea?w=200&h=200&fit=crop',
 //     website: 'https://techcorp.example.com',
 //     description: `TechCorp is a leading technology solutions provider specializing in innovative software development and digital transformation. Founded in 2010, we've grown from a small startup to a global technology leader with offices worldwide.
 
@@ -30,7 +30,7 @@ const mockCompany: Company = {
 //     size: '201-500',
 //     location: 'San Francisco, CA',
 //     employerId: '1',
-};
+// };
 
 // const mockJobs: Job[] = [
 //   {
@@ -80,6 +80,8 @@ export function CompanyDetailsPage() {
 
   ]);
   const token = localStorage.getItem('Stoken')
+  const logo = 'https://img.freepik.com/free-vector/gradient-technology-logo-template-companies_52683-14451.jpg?t=st=1734756875~exp=1734760475~hmac=24b1a42659d95ee29c708c894533a4c625a5983d06732181b41a57d7d8df04bb&w=740';
+
 
   useEffect(() => {
     const fetchJobs = async () => {
@@ -115,7 +117,7 @@ export function CompanyDetailsPage() {
         {/* Company Header */}
         <div className="flex flex-col md:flex-row gap-6 items-start mb-8">
           <img
-            src={mockCompany.logo}
+            src={logo}
             alt={company?.name}
             className="w-24 h-24 rounded-lg object-cover"
           />
@@ -164,14 +166,21 @@ export function CompanyDetailsPage() {
                 <CardTitle>About {company?.name}</CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="whitespace-pre-line">{company?.description}</p>
+                <p className="whitespace-pre-line">
+                  {company?.description
+                    ? company.description.length > 100
+                      ? `${company.description.slice(0, 100)}...`
+                      : company.description
+                    : "No description available"}
+                </p>
               </CardContent>
             </Card>
           </TabsContent>
 
           <TabsContent value="jobs">
             <div className="space-y-4">
-              {jobs.map((job) => (
+              {jobs.length?
+              jobs.map((job) => (
                 <Card key={job._id}>
                   <CardHeader>
                     <CardTitle>{job.title}</CardTitle>
@@ -195,8 +204,12 @@ export function CompanyDetailsPage() {
                         )}
                       </Badge>
                     </div>
-                    <p className="text-sm text-muted-foreground mb-4">
-                      {job.description}
+                    <p className="text-sm text-muted-foreground mb-4 whitespace-pre-line">
+                      {job?.description
+                        ? job.description.length > 50
+                          ? `${job.description.slice(0, 50)}...`
+                          : job.description
+                        : "No description available"}
                     </p>
                     <Link
                       key={job._id}
@@ -209,7 +222,7 @@ export function CompanyDetailsPage() {
                     </Link>
                   </CardContent>
                 </Card>
-              ))}
+              )):"No jobs available"}
             </div>
           </TabsContent>
         </Tabs>

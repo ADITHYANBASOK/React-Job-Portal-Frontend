@@ -132,34 +132,12 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { MoreVertical, Pencil, Trash2, Eye } from 'lucide-react';
-import { EditJobDialog } from './EditJobDialog'; // Make sure the path is correct
+import { EditJobDialog } from './EditJobDialog';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
 
-// Mock data - replace with actual API call
-// const mockJobs: Job[] = [
-//   {
-//     id: '1',
-//     title: 'Senior Frontend Developer',
-//     company: 'TechCorp',
-//     location: 'Remote',
-//     type: 'full-time',
-//     salary: {
-//       min: 100000,
-//       max: 150000,
-//       currency: 'USD',
-//     },
-//     description: 'We are looking for a senior frontend developer...',
-//     requirements: ['5+ years of experience', 'React expertise'],
-//     benefits: ['Health insurance', '401k'],
-//     employerId: '1',
-//     createdAt: new Date('2024-01-01'),
-//     updatedAt: new Date('2024-01-01'),
-//     status: 'published',
-//   },
-//   // Add more mock jobs as needed
-// ];
+
 interface Company {
   _id: string;
   employerId: string;
@@ -204,26 +182,8 @@ export function JobList({ searchQuery }: JobListProps) {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [selectedJob, setSelectedJob] = useState<Jobs | null>(null); // State for the selected job
   const [showDeleteConfirm, setShowDeleteConfirm] = useState<string | null>(null);
-  const [jobs, setJobs] = useState<Jobs[]>([
-    // {
-    //       id: '1',
-    //       title: 'Senior Frontend Developer',
-    //       company: 'TechCorp',
-    //       location: 'Remote',
-    //       type: 'full-time',
-    //       salary: {
-    //         min: 100000,
-    //         max: 150000,
-    //         currency: 'USD',
-    //       },
-    //       description: 'We are looking for a senior frontend developer...',
-    //       requirements: ['5+ years of experience', 'React expertise'],
-    //       benefits: ['Health insurance', '401k'],
-    //       employerId: '1',
-    //       createdAt: new Date('2024-01-01'),
-    //       updatedAt: new Date('2024-01-01'),
-    //       status: 'published',
-    //     },
+  const [jobs, setJobs] = useState<Job[]>([
+
   ]);
   const token = localStorage.getItem('Etoken')
 
@@ -239,7 +199,7 @@ export function JobList({ searchQuery }: JobListProps) {
     };
 
     fetchJobs();
-  }, []); 
+  }, []);
 
 
   const filteredJobs = jobs.filter((job) =>
@@ -308,13 +268,15 @@ export function JobList({ searchQuery }: JobListProps) {
                 {/* {formatSalary(job.salaryMin, job.salaryMax)} */}{job.salaryMin} - {job.salaryMax}
               </Badge>
             </div>
-            <p className="text-sm text-muted-foreground line-clamp-2">
-              {job.description}
+            <p className="text-sm text-muted-foreground line-clamp-2 whitespace-pre-line">
+              {job.description.length > 100
+                ? `${job.description.slice(0, 100)}...`
+                : job.description}
             </p>
             <div className="flex justify-between items-center text-sm text-muted-foreground">
-              {/* <span>Posted {job.createdAt.toLocaleDateString()}</span> */}
+              <span> Posted {job.createdAt ? new Date(job.createdAt).toLocaleDateString() : 'N/A'}</span>
               <Badge
-                // variant={job.status === 'published' ? 'default' : 'secondary'}
+              // variant={job.status === 'published' ? 'default' : 'secondary'}
               >
                 {/* {job.status} */}
               </Badge>
@@ -322,7 +284,7 @@ export function JobList({ searchQuery }: JobListProps) {
           </CardContent>
         </Card>
       ))}
-      
+
       {/* Edit Job Dialog */}
       {selectedJob && (
         <EditJobDialog
@@ -331,7 +293,7 @@ export function JobList({ searchQuery }: JobListProps) {
           onOpenChange={setIsDialogOpen}
         />
       )}
-       {showDeleteConfirm && (
+      {showDeleteConfirm && (
         <div className="fixed inset-0 z-50 overflow-y-auto">
           <div className="flex items-center justify-center min-h-screen px-4 pt-4 pb-20 text-center">
             <div className="fixed inset-0 transition-opacity" onClick={() => setShowDeleteConfirm(null)}>
@@ -373,6 +335,6 @@ export function JobList({ searchQuery }: JobListProps) {
       )}
     </div>
 
-    
+
   );
 }

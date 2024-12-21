@@ -31,12 +31,11 @@ export function HomePage() {
         </div>
       </section>
 
-      <section className="py-20">
+      {/* <section className="py-20">
         <div className="container">
           <h2 className="text-3xl font-bold text-center mb-12">
             Featured Jobs
           </h2>
-          {/* Featured jobs grid will go here */}
         </div>
       </section>
 
@@ -45,9 +44,8 @@ export function HomePage() {
           <h2 className="text-3xl font-bold text-center mb-12">
             Top Companies
           </h2>
-          {/* Companies grid will go here */}
         </div>
-      </section>
+      </section> */}
     </div>
   );
 }

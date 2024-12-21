@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Search, MapPin, Building2, Clock } from 'lucide-react';
+import { Search, MapPin, Building2, Clock, CheckCircle, XCircle } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import {
@@ -20,17 +20,17 @@ export function JobsPage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedType, setSelectedType] = useState<string>('all');
   const [selectedLocation, setSelectedLocation] = useState<string>('all');
-  const [auth , setAuth] =useState<boolean>(false);
+  // const [auth , setAuth] =useState<boolean>(false);
   const [jobs, setJobs] = useState<Job[]>([
-   
+
   ]);
-  // const token = localStorage.getItem('stoken')
+  const token = localStorage.getItem('Stoken')
 
   useEffect(() => {
     const fetchJobs = async () => {
       try {
         const response = await axios.get(`http://localhost:5000/api/jobs/alljobs`); // Replace with your backend endpoint
-        console.log("response34",response)
+        console.log("response34", response)
         setJobs(response.data); // Assuming the backend returns an array of jobs
       } catch (error) {
         console.error('Error fetching jobs:', error);
@@ -38,9 +38,9 @@ export function JobsPage() {
     };
 
     fetchJobs();
-  }, []); 
+  }, []);
 
-  const formatSalary = (min: number, max: number, ) => {
+  const formatSalary = (min: number, max: number,) => {
     const formatter = new Intl.NumberFormat('en-US', {
       // style: 'currency',
       // currency,
@@ -53,24 +53,24 @@ export function JobsPage() {
     const matchesSearch =
       job.title?.toLowerCase().includes(searchQuery.toLowerCase()) ||
       job.company?.name?.toLowerCase().includes(searchQuery.toLowerCase());
-  
+
     const matchesType =
       selectedType === 'all' ||
       job.type?.toLowerCase().trim() === selectedType.toLowerCase().trim();
-  
+
     const matchesLocation =
       selectedLocation === 'all' ||
       job.location?.toLowerCase().trim() === selectedLocation.toLowerCase().trim();
-  
+
     // Log only true values
     if (matchesSearch) console.log('Search Matches:', job.title);
     if (matchesType) console.log('Type Matches:', job.type);
     if (matchesLocation) console.log('Location Matches:', job.location);
-  
+
     return matchesSearch && matchesType && matchesLocation;
   });
-  
-  
+
+
 
   const locations = Array.from(new Set(jobs.map((job) => job.location)));
 
@@ -133,7 +133,7 @@ export function JobsPage() {
         {filteredJobs.map((job) => (
           <Link
             key={job._id}
-            to={auth?`/seeker/jobs/${job._id}`:`/jobs/${job._id}`}
+            to={token ? `/seeker/jobs/${job._id}` : `/jobs/${job._id}`}
             className="block group"
           >
             <div className="border rounded-lg p-6 hover:border-primary transition-colors">
@@ -145,12 +145,14 @@ export function JobsPage() {
                   <p className="text-muted-foreground">{job.company.name}</p>
                 </div>
                 <Badge variant="secondary">
-                {formatSalary(job.salaryMin, job.salaryMax)}
+                  {formatSalary(job.salaryMin, job.salaryMax)}
 
                 </Badge>
               </div>
-              <p className="text-sm text-muted-foreground mb-4 line-clamp-2">
-                {job.description}
+              <p className="text-sm text-muted-foreground line-clamp-2 whitespace-pre-line">
+                {job.description.length > 100
+                  ? `${job.description.slice(0, 100)}...`
+                  : job.description}
               </p>
               <div className="flex flex-wrap gap-2">
                 <Badge variant="secondary">
@@ -164,6 +166,22 @@ export function JobsPage() {
                 <Badge variant="secondary">
                   <Clock className="w-3 h-3 mr-1" />
                   {new Date(job.createdAt).toLocaleDateString()}
+                </Badge>
+                <Badge
+                  variant={job.__v === 0 ? "default" : "destructive"}
+                  className={job.__v === 0 ? "bg-green-100 text-green-800" : "bg-red-100 text-red-800"}
+                >
+                  {job.__v === 0 ? (
+                    <>
+                      <CheckCircle className="w-3 h-3 mr-1 text-green-500" />
+                      Active
+                    </>
+                  ) : (
+                    <>
+                      <XCircle className="w-3 h-3 mr-1 text-red-500" />
+                      Inactive
+                    </>
+                  )}
                 </Badge>
               </div>
             </div>

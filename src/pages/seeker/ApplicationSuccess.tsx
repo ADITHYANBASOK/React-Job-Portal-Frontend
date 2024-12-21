@@ -28,7 +28,7 @@ export default function ApplicationSuccess() {
 
           <div className="flex flex-col sm:flex-row justify-center gap-4">
             <button
-              onClick={() => navigate('/jobs')}
+              onClick={() => navigate('/seeker/jobs')}
               className="flex items-center justify-center px-6 py-3 bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-200 rounded-lg border border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors"
             >
               <ArrowLeft className="h-5 w-5 mr-2" />

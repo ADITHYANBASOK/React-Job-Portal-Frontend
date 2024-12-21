@@ -13,48 +13,7 @@ import { Job } from '@/types';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 
-// Mock data - replace with API call
-// const mockJobs: Job[] = [
-//   {
-//     id: '1',
-//     title: 'Senior Frontend Developer',
-//     company: 'TechCorp',
-//     location: 'Remote',
-//     type: 'full-time',
-//     salary: {
-//       min: 100000,
-//       max: 150000,
-//       currency: 'USD',
-//     },
-//     description: `We are seeking a Senior Frontend Developer to join our dynamic team. The ideal candidate will have a strong foundation in modern web technologies and a passion for creating exceptional user experiences.
 
-// Key Responsibilities:
-// - Lead frontend development initiatives and mentor junior developers
-// - Architect and implement scalable frontend solutions
-// - Collaborate with designers and backend developers
-// - Optimize application performance and ensure cross-browser compatibility
-// - Participate in code reviews and maintain coding standards`,
-//     requirements: [
-//       '5+ years of experience with React',
-//       'Strong TypeScript skills',
-//       'Experience with modern frontend tools',
-//       'Excellent problem-solving abilities',
-//       'Strong communication skills',
-//     ],
-//     benefits: [
-//       'Competitive salary',
-//       'Remote work',
-//       'Health insurance',
-//       '401k matching',
-//       'Flexible vacation policy',
-//       'Professional development budget',
-//     ],
-//     employerId: '1',
-//     createdAt: new Date('2024-03-01'),
-//     updatedAt: new Date('2024-03-01'),
-//     status: 'published',
-//   },
-// ];
 
 export function JobDetailsPage() {
   const [jobs, setJobs] = useState<Job | null>(null);
@@ -62,6 +21,10 @@ export function JobDetailsPage() {
   console.log("id",id)
   const navigate = useNavigate();
   const token = localStorage.getItem('Stoken')
+  const [isApplied, setIsApplied] = useState(false);
+  const [isSaved, setIsSaved] = useState(false); // Track if the job is saved
+
+
 
   useEffect(() => {
     const fetchJobs = async () => {
@@ -73,11 +36,87 @@ export function JobDetailsPage() {
         console.error('Error fetching jobs:', error);
       }
     };
+    const checkApplicationStatus = async () => {
+      try {
+        if (!token) return;
+  
+        const response = await axios.get(
+          `http://localhost:5000/api/applications/check/${id}`,
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
+        console.log("response.data",response.data)
+        setIsApplied(response.data.applied);
+      } catch (error) {
+        console.error('Error checking application status:', error);
+      }
+    };
+    const checkSavedStatus = async () => {
+      try {
+        if (!token) return;
+        const response = await axios.get(`http://localhost:5000/api/savedJob/${id}`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        console.log("response3",response)
+        setIsSaved(response.data.saved);
+      } catch (error) {
+        console.error('Error checking saved status:', error);
+      }
+    };
 
     fetchJobs();
+    checkApplicationStatus();
+    checkSavedStatus();
   }, []); 
-  // const { id } = useParams();
-  // const job = mockJobs.find((j) => j.id === id);
+ 
+
+  const applyForJob = async (jobId: string) => {
+    try {
+      if(token){
+      const response = await axios.post(
+        'http://localhost:5000/api/applications',
+        { jobId },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`, // Token for authentication
+          },
+        }
+      );
+  
+      console.log(response.data.message);
+      navigate('/seeker/Application-Success')
+    }else{
+      navigate('/login')
+    }
+    } catch (error) {
+      console.error('Error applying for job:', error);
+    }
+  };
+
+  const saveJob = async (jobId: string) => {
+    try {
+      if (!token) {
+        navigate('/login');
+        return;
+      }
+
+      const response = await axios.post(
+        'http://localhost:5000/api/savedJob',
+        { jobId },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      console.log(response.data.message);
+      setIsSaved(true);
+    } catch (error) {
+      console.error('Error saving job:', error);
+    }
+  };
 
   if (!jobs) {
     return (
@@ -184,9 +223,21 @@ export function JobDetailsPage() {
                 </CardDescription>
               </CardHeader>
               <CardContent>
-                <Button className="w-full" size="lg" onClick={() =>{token? navigate('/seeker/Application-Success'):navigate('/login')}}
+                {/* <Button className="w-full" size="lg" onClick={() =>{token? navigate('/seeker/Application-Success'):navigate('/login')}} */}
+                <Button className="w-full" size="lg" disabled={isApplied} onClick={() => applyForJob(jobs._id)}
+
                 >
-                  Apply for this Job
+               {isApplied ? 'Already Applied' : 'Apply for this Job'}
+
+                </Button>
+                <Button
+                  className="w-full mt-4"
+                  variant="outline"
+                  size="lg"
+                  disabled={isSaved}
+                  onClick={() => saveJob(jobs._id)}
+                >
+                  {isSaved ? 'Job Saved' : 'Save this Job'}
                 </Button>
               </CardContent>
             </Card>
