@@ -16,7 +16,7 @@ import axios from 'axios';
 
 
 
-export function JobsPage() {
+export default function JobsPage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedType, setSelectedType] = useState<string>('all');
   const [selectedLocation, setSelectedLocation] = useState<string>('all');
@@ -29,7 +29,7 @@ export function JobsPage() {
   useEffect(() => {
     const fetchJobs = async () => {
       try {
-        const response = await axios.get(`http://localhost:5000/api/jobs/alljobs`); // Replace with your backend endpoint
+        const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/jobs/alljobs`); // Replace with your backend endpoint
         console.log("response34", response)
         setJobs(response.data); // Assuming the backend returns an array of jobs
       } catch (error) {

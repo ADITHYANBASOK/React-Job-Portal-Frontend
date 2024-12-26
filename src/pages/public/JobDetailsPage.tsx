@@ -15,7 +15,7 @@ import axios from 'axios';
 
 
 
-export function JobDetailsPage() {
+export default function JobDetailsPage() {
   const [jobs, setJobs] = useState<Job | null>(null);
   const { id } = useParams();
   console.log("id",id)
@@ -29,7 +29,7 @@ export function JobDetailsPage() {
   useEffect(() => {
     const fetchJobs = async () => {
       try {
-        const response = await axios.get(`http://localhost:5000/api/jobs/singleuserJob/${id}`); // Replace with your backend endpoint
+        const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/jobs/singleuserJob/${id}`); // Replace with your backend endpoint
         console.log("data",response.data)
         setJobs(response.data); // Assuming the backend returns an array of jobs
       } catch (error) {
@@ -41,7 +41,7 @@ export function JobDetailsPage() {
         if (!token) return;
   
         const response = await axios.get(
-          `http://localhost:5000/api/applications/check/${id}`,
+          `${import.meta.env.VITE_API_URL}/api/applications/check/${id}`,
           {
             headers: { Authorization: `Bearer ${token}` },
           }
@@ -55,7 +55,7 @@ export function JobDetailsPage() {
     const checkSavedStatus = async () => {
       try {
         if (!token) return;
-        const response = await axios.get(`http://localhost:5000/api/savedJob/${id}`, {
+        const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/savedJob/${id}`, {
           headers: { Authorization: `Bearer ${token}` },
         });
         console.log("response3",response)
@@ -75,7 +75,7 @@ export function JobDetailsPage() {
     try {
       if(token){
       const response = await axios.post(
-        'http://localhost:5000/api/applications',
+        `${import.meta.env.VITE_API_URL}/api/applications`,
         { jobId },
         {
           headers: {
@@ -102,7 +102,7 @@ export function JobDetailsPage() {
       }
 
       const response = await axios.post(
-        'http://localhost:5000/api/savedJob',
+        `${import.meta.env.VITE_API_URL}/api/savedJob`,
         { jobId },
         {
           headers: {

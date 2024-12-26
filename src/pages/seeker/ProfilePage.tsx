@@ -31,14 +31,15 @@ export default function SeekerProfilePage() {
   const [isEditing, setIsEditing] = useState(false);
   const [profileData, setProfileData] = useState<ProfileData>({ bio: '', location: '', phone: '' });
   const [userData, setUserData] = useState<UserData | null>(null);
+  console.log(isEditing)
 
   useEffect(() => {
     const fetchJobs = async () => {
       try {
-        const response = await axios.get(`http://localhost:5000/api/auth/user/${token}`); // Replace with your backend endpoint
+        const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/auth/user/${token}`); // Replace with your backend endpoint
         console.log("response", response)
         setUserData(response.data)
-        const response1 = await axios.get(`http://localhost:5000/api/profile/${userData?.id}`,  {
+        const response1 = await axios.get(`${import.meta.env.VITE_API_URL}/api/profile/${userData?.id}`,  {
           headers: { Authorization: `Bearer ${token}` },
         });
         console.log("response1",response1)
@@ -56,7 +57,7 @@ export default function SeekerProfilePage() {
   const handleProfileUpdate = async (newData: ProfileData) => {
     try {
       console.log("userData.id",userData?.id)
-      const response = await axios.put(`http://localhost:5000/api/profile/${userData?.id}`, newData, {
+      const response = await axios.put(`${import.meta.env.VITE_API_URL}/api/profile/${userData?.id}`, newData, {
         headers: { Authorization: `Bearer ${token}` },
       });
       setProfileData(response.data); // Update frontend state with backend response
@@ -73,7 +74,7 @@ export default function SeekerProfilePage() {
           name={userData.name}
           email={userData.email}
           avatar={
-            'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80'
+            'https://img.freepik.com/free-vector/young-man-with-glasses-avatar_1308-175763.jpg?t=st=1734761283~exp=1734764883~hmac=a17676daf1c15e566503ec1dcfc4485d8b0844413871601c2c4ddbe4096b579f&w=740'
           }
         />
       ) : (
@@ -81,8 +82,8 @@ export default function SeekerProfilePage() {
       )}
       <ProfileInfo
         profileData={profileData}
-        isEditing={isEditing}
-        onEdit={() => setIsEditing(!isEditing)}
+        // isEditing={isEditing}
+        // onEdit={() => setIsEditing(!isEditing)}
         onUpdate={handleProfileUpdate}
       />
       <SkillsList />

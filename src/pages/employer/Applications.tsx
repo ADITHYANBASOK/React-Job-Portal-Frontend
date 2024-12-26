@@ -25,38 +25,7 @@ interface Application {
 
 export default function EmployerApplicationsPage() {
   const [applications,setApplications] = useState<Application[]>([
-    // {
-    //   id: '1',
-    //   candidate: {
-    //     name: 'John Smith',
-    //     email: 'john.smith@example.com',
-    //     phone: '+1 (555) 123-4567',
-    //     avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
-    //   },
-    //   job: {
-    //     title: 'Senior Frontend Developer',
-    //     department: 'Engineering',
-    //   },
-    //   status: 'reviewing',
-    //   appliedDate: '2024-03-15',
-    //   experience: '5 years',
-    // },
-    // {
-    //   id: '2',
-    //   candidate: {
-    //     name: 'Sarah Wilson',
-    //     email: 'sarah.wilson@example.com',
-    //     phone: '+1 (555) 987-6543',
-    //     avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
-    //   },
-    //   job: {
-    //     title: 'Frontend Developer',
-    //     department: 'Engineering',
-    //   },
-    //   status: 'shortlisted',
-    //   appliedDate: '2024-03-14',
-    //   experience: '3 years',
-    // },
+    
   ]);
   const token = localStorage.getItem('Etoken')
 
@@ -71,7 +40,7 @@ export default function EmployerApplicationsPage() {
         if (!token) return;
 
         const response = await axios.get(
-          `http://localhost:5000/api/applications/employer`,
+          `${import.meta.env.VITE_API_URL}/api/applications/employer`,
           {
             headers: { Authorization: `Bearer ${token}` },
           }
@@ -122,7 +91,7 @@ export default function EmployerApplicationsPage() {
   
       // Send the update request to the backend
       const response = await axios.put(
-        `http://localhost:5000/api/applications/update-status`,
+        `${import.meta.env.VITE_API_URL}/api/applications/update-status`,
         { applicationId: id, newStatus },
         {
           headers: {

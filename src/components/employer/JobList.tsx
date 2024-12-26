@@ -190,7 +190,7 @@ export function JobList({ searchQuery }: JobListProps) {
   useEffect(() => {
     const fetchJobs = async () => {
       try {
-        const response = await axios.get(`http://localhost:5000/api/jobs/employerjobs/${token}`); // Replace with your backend endpoint
+        const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/jobs/employerjobs/${token}`); // Replace with your backend endpoint
         console.log(response)
         setJobs(response.data); // Assuming the backend returns an array of jobs
       } catch (error) {
@@ -206,14 +206,14 @@ export function JobList({ searchQuery }: JobListProps) {
     job.title.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
-  const formatSalary = (min: number, max: number, currency: string) => {
-    const formatter = new Intl.NumberFormat('en-US', {
-      style: 'currency',
-      currency,
-      maximumFractionDigits: 0,
-    });
-    return `${formatter.format(min)} - ${formatter.format(max)}`;
-  };
+  // const formatSalary = (min: number, max: number, currency: string) => {
+  //   const formatter = new Intl.NumberFormat('en-US', {
+  //     style: 'currency',
+  //     currency,
+  //     maximumFractionDigits: 0,
+  //   });
+  //   return `${formatter.format(min)} - ${formatter.format(max)}`;
+  // };
 
   const handleEditJob = (job: Jobs) => {
     setSelectedJob(job); // Set the selected job for editing

@@ -14,7 +14,7 @@ export default function EmployerJobDetailsPage() {
   useEffect(() => {
     const fetchJobs = async () => {
       try {
-        const response = await axios.get(`http://localhost:5000/api/jobs/singleJob/${token}/${id}`); // Replace with your backend endpoint
+        const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/jobs/singleJob/${token}/${id}`); // Replace with your backend endpoint
         console.log("data",response.data)
         setJobs(response.data); // Assuming the backend returns an array of jobs
       } catch (error) {

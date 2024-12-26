@@ -1,5 +1,5 @@
 import { Link, Outlet, useLocation, useNavigate } from 'react-router-dom';
-import { Briefcase, LayoutDashboard, Users, Settings, FileText, MessageSquare, User, BarChart2 , Building2 } from 'lucide-react';
+import { Briefcase, LayoutDashboard, Users, Settings, FileText, User, BarChart2 , Building2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { ThemeToggle } from '@/components/theme/ThemeToggle';
@@ -15,10 +15,10 @@ interface NavItem {
 const roleNavItems: Record<string, NavItem[]> = {
   seeker: [
     { label: 'Dashboard', icon: <LayoutDashboard className="w-4 h-4" />, href: '/seeker/dashboard' },
-    { label: 'Applications', icon: <FileText className="w-4 h-4" />, href: '/seeker/applications' },
-    { label: 'Messages', icon: <MessageSquare className="w-4 h-4" />, href: '/seeker/messages' },
-    { label: 'Profile', icon: <User className="w-4 h-4" />, href: '/seeker/profile' },
     { label: 'Jobs', icon: <Briefcase className="w-4 h-4" />, href: '/seeker/jobs' },
+    { label: 'Applications', icon: <FileText className="w-4 h-4" />, href: '/seeker/applications' },
+    // { label: 'Messages', icon: <MessageSquare className="w-4 h-4" />, href: '/seeker/messages' },
+    { label: 'Profile', icon: <User className="w-4 h-4" />, href: '/seeker/profile' },
     { label: 'Companies', icon: <Building2 className="w-4 h-4" />, href: '/seeker/companies' },
 
 
@@ -27,7 +27,7 @@ const roleNavItems: Record<string, NavItem[]> = {
     { label: 'Dashboard', icon: <LayoutDashboard className="w-4 h-4" />, href: '/employer/dashboard' },
     { label: 'Jobs', icon: <Briefcase className="w-4 h-4" />, href: '/employer/jobs' },
     { label: 'Applications', icon: <FileText className="w-4 h-4" />, href: '/employer/applications' },
-    { label: 'Messages', icon: <MessageSquare className="w-4 h-4" />, href: '/employer/messages' },
+    // { label: 'Messages', icon: <MessageSquare className="w-4 h-4" />, href: '/employer/messages' },
     { label: 'Profile', icon: <User className="w-4 h-4" />, href: '/employer/profile' },
   ],
   admin: [

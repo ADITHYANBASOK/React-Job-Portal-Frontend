@@ -1,7 +1,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { BarChart, Users, Briefcase, AlertTriangle } from 'lucide-react';
 
-export function AdminDashboardPage() {
+export default function AdminDashboardPage() {
   return (
     <div className="space-y-6">
       <h1 className="text-3xl font-bold">Admin Dashboard</h1>

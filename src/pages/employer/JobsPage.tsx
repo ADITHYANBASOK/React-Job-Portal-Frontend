@@ -5,7 +5,7 @@ import { Input } from '@/components/ui/input';
 import { JobList } from '@/components/employer/JobList';
 import { CreateJobDialog } from '@/components/employer/CreateJobDialog';
 
-export function EmployerJobsPage() {
+export default function EmployerJobsPage() {
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
 

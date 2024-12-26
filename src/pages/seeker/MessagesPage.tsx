@@ -58,7 +58,7 @@ export default function SeekerMessagesPage() {
 
   const handleSendMessage = async (content : string) => {
     try {
-      const response = await axios.post('http://localhost:5000/api/messages/messages', {
+      const response = await axios.post(`${import.meta.env.VITE_API_URL}/api/messages/messages`, {
         content,
         sender: 'me',
       });

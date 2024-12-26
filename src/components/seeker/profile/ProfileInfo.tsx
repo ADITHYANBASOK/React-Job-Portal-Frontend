@@ -116,12 +116,12 @@ interface ProfileData {
 
 interface Props {
   profileData: ProfileData;
-  isEditing: boolean;
-  onEdit: () => void;
+  // isEditing: boolean;
+  // onEdit: () => void;
   onUpdate: (data: ProfileData) => void;
 }
 
-export default function ProfileInfo({ profileData, isEditing, onEdit, onUpdate }: Props) {
+export default function ProfileInfo({ profileData,  onUpdate }: Props) {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [updatedProfileData, setUpdatedProfileData] = useState(profileData);
   useEffect(() => {

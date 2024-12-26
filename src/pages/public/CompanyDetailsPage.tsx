@@ -15,65 +15,8 @@ import { Company, Job } from '@/types';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 
-// Mock data - replace with API calls
-// const mockCompany: Company = {
-//     _id: '1',
-//     name: 'TechCorp',
-// logo: 'https://images.unsplash.com/photo-1549923746-c502d488b3ea?w=200&h=200&fit=crop',
-//     website: 'https://techcorp.example.com',
-//     description: `TechCorp is a leading technology solutions provider specializing in innovative software development and digital transformation. Founded in 2010, we've grown from a small startup to a global technology leader with offices worldwide.
 
-//   Our mission is to empower businesses through cutting-edge technology solutions that drive growth and innovation. We believe in fostering a culture of creativity, collaboration, and continuous learning.
-
-//   We're proud to have built a diverse team of talented individuals who share our passion for technology and innovation. Our work environment promotes open communication, professional growth, and work-life balance.`,
-//     industry: 'Technology',
-//     size: '201-500',
-//     location: 'San Francisco, CA',
-//     employerId: '1',
-// };
-
-// const mockJobs: Job[] = [
-//   {
-//     id: '1',
-//     title: 'Senior Frontend Developer',
-//     company: 'TechCorp',
-//     location: 'Remote',
-//     type: 'full-time',
-//     salary: {
-//       min: 100000,
-//       max: 150000,
-//       currency: 'USD',
-//     },
-//     description: 'We are looking for a senior frontend developer...',
-//     requirements: ['5+ years of experience', 'React expertise'],
-//     benefits: ['Health insurance', '401k'],
-//     employerId: '1',
-//     createdAt: new Date('2024-03-01'),
-//     updatedAt: new Date('2024-03-01'),
-//     status: 'published',
-//   },
-//   {
-//     id: '2',
-//     title: 'Product Designer',
-//     company: 'TechCorp',
-//     location: 'San Francisco, CA',
-//     type: 'full-time',
-//     salary: {
-//       min: 90000,
-//       max: 130000,
-//       currency: 'USD',
-//     },
-//     description: 'Join our creative team as a Product Designer...',
-//     requirements: ['3+ years of experience', 'Figma expertise'],
-//     benefits: ['Health insurance', 'Flexible hours'],
-//     employerId: '1',
-//     createdAt: new Date('2024-03-02'),
-//     updatedAt: new Date('2024-03-02'),
-//     status: 'published',
-//   },
-// ];
-
-export function CompanyDetailsPage() {
+export default function CompanyDetailsPage() {
   const { id } = useParams();
   const [company, setCompany] = useState<Company | null>(null);
   const [jobs, setJobs] = useState<Job[]>([
@@ -86,9 +29,9 @@ export function CompanyDetailsPage() {
   useEffect(() => {
     const fetchJobs = async () => {
       try {
-        const response = await axios.get(`http://localhost:5000/api/companies/singlecompany/${id}`); // Replace with your backend endpoint
+        const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/companies/singlecompany/${id}`); // Replace with your backend endpoint
         console.log("data", response.data)
-        const response1 = await axios.get(`http://localhost:5000/api/jobs/Jobbycompany/${id}`); // Replace with your backend endpoint
+        const response1 = await axios.get(`${import.meta.env.VITE_API_URL}/api/jobs/Jobbycompany/${id}`); // Replace with your backend endpoint
         console.log("response34", response)
         console.log("response34q", response1.data.jobs)
 
@@ -168,9 +111,7 @@ export function CompanyDetailsPage() {
               <CardContent>
                 <p className="whitespace-pre-line">
                   {company?.description
-                    ? company.description.length > 100
-                      ? `${company.description.slice(0, 100)}...`
-                      : company.description
+                    ? company.description
                     : "No description available"}
                 </p>
               </CardContent>

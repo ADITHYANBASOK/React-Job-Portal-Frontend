@@ -1,10 +1,10 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import axios from 'axios';
-import { BarChart, Star, Send, Eye } from 'lucide-react';
+import {  Star, Send  } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 
-export function SeekerDashboardPage() {
+export default function SeekerDashboardPage() {
   
   const token = localStorage.getItem('Stoken')
     const [count, setCount] = useState<{seekerId:string,applicationCount:number,savedJobCount:number} | null>(null);
@@ -16,7 +16,7 @@ export function SeekerDashboardPage() {
         if (!token) return;
 
         const response = await axios.get(
-          `http://localhost:5000/api/applications/applivationCount`,
+          `${import.meta.env.VITE_API_URL}/api/applications/applivationCount`,
           {
             headers: { Authorization: `Bearer ${token}` },
           }

@@ -10,32 +10,7 @@ interface AppliedJob {
   status: 'pending' | 'reviewing' | 'shortlisted' | 'rejected';
 }
 
-// const appliedJobs: AppliedJob[] = [
-//   {
-//     id: '1',
-//     title: 'Frontend Developer',
-//     company: 'Tech Corp',
-//     department: 'Engineering',
-//     appliedDate: '2024-11-10',
-//     status: 'shortlisted',
-//   },
-//   {
-//     id: '2',
-//     title: 'Backend Developer',
-//     company: 'CodeWorks',
-//     department: 'Development',
-//     appliedDate: '2024-11-08',
-//     status: 'reviewing',
-//   },
-//   {
-//     id: '3',
-//     title: 'UI/UX Designer',
-//     company: 'Designify',
-//     department: 'Creative',
-//     appliedDate: '2024-11-05',
-//     status: 'pending',
-//   },
-// ];
+
 
 export default function JobSeekerDashboard() {
 const token = localStorage.getItem('Stoken');
@@ -51,7 +26,7 @@ useEffect(() => {
       if (!token) return;
 
       const response = await axios.get(
-        `http://localhost:5000/api/applications`,
+        `${import.meta.env.VITE_API_URL}/api/applications`,
         {
           headers: { Authorization: `Bearer ${token}` },
         }

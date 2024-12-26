@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Filter, Search } from 'lucide-react';
+import {  Search } from 'lucide-react';
 
 interface ApplicationFiltersProps {
   onSearch: (query: string) => void;

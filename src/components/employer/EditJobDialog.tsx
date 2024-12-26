@@ -75,7 +75,7 @@ export function EditJobDialog({ job, open, onOpenChange }: EditJobDialogProps) {
     setIsSubmitting(true);
     try {
       // TODO: Implement job update API call
-      const response = await axios.put(`http://localhost:5000/api/jobs/jobs/${job._id}/${token}`, values);
+      const response = await axios.put(`${import.meta.env.VITE_API_URL}/api/jobs/jobs/${job._id}/${token}`, values);
   
       console.log('Job created successfully:', response.data);
       console.log(values);

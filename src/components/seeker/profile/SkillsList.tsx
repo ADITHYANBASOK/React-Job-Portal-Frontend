@@ -78,9 +78,7 @@ interface Skill {
 
 export default function SkillsList() {
   const [skills, setSkills] = useState<Skill[]>([
-    // { id: '1', name: 'React', level: 90 },
-    // { id: '2', name: 'TypeScript', level: 85 },
-    // { id: '3', name: 'Node.js', level: 80 },
+    
   ]);
   const token = localStorage.getItem('Stoken')
 
@@ -96,7 +94,7 @@ export default function SkillsList() {
     const fetchSkills = async () => {
       try {
         
-        const response = await axios.get(`http://localhost:5000/api/skill`,  {
+        const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/skill`,  {
           headers: { Authorization: `Bearer ${token}` },
         });
         console.log("response.data",response.data)
@@ -127,7 +125,7 @@ export default function SkillsList() {
   const handleSubmit = async () => {
     try {
     
-      const response = await axios.post(`http://localhost:5000/api/skill`, {
+      const response = await axios.post(`${import.meta.env.VITE_API_URL}/api/skill`, {
         name: newSkill.name,
         level: newSkill.level, 
       },{

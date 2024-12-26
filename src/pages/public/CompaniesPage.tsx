@@ -40,11 +40,11 @@ import axios from 'axios';
 //   },
 // ];
 
-export function CompaniesPage() {
+export default function CompaniesPage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedIndustry, setSelectedIndustry] = useState<string>('all');
   const [selectedSize, setSelectedSize] = useState<string>('all');
-  const [auth , setAuth] =useState<boolean>(false);
+  const [auth ] =useState<boolean>(false);
   const [companies, setCompanies] = useState<Company[] >([
    
   ]);
@@ -55,7 +55,7 @@ useEffect
   useEffect(() => {
     const fetchJobs = async () => {
       try {
-        const response = await axios.get('http://localhost:5000/api/companies'); // Replace with your backend endpoint
+        const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/companies`); // Replace with your backend endpoint
         console.log("response341",response)
         setCompanies(response.data); // Assuming the backend returns an array of jobs
       } catch (error) {
